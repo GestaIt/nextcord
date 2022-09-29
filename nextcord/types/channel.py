@@ -78,8 +78,25 @@ class _ForumChannelOptional(TypedDict, total=False):
     default_auto_archive_duration: ThreadArchiveDuration
 
 
+class ForumTag(TypedDict, total=False):
+    id: Snowflake
+    name: str
+    moderated: bool
+    emoji_id: Snowflake
+    emoji_name: Optional[str]  # Despite being called "emoji_name," this field defines the unicode character.
+
+
+class DefaultEmoji(TypedDict, total=False):
+    emoji_id: Snowflake
+    emoji_name: Optional[str]  # Once again, referencing the unicode character.
+
+
 class ForumChannel(_BaseGuildChannel, _ForumChannelOptional):
     type: Literal[15]
+    available_tags: List[ForumTag]
+    applied_tags: List[int]  # This will contain id's for the applied tags.
+    default_reaction_emoji: DefaultEmoji
+    default_thread_rate_limit_per_user: int
 
 
 class NewsChannel(_BaseGuildChannel, _TextChannelOptional):

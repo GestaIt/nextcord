@@ -83,6 +83,8 @@ if TYPE_CHECKING:
     from .types.channel import (
         CategoryChannel as CategoryChannelPayload,
         DMChannel as DMChannelPayload,
+        ForumTag as ForumTagPayload,
+        DefaultEmoji as DefaultEmojiPayload,
         ForumChannel as ForumChannelPayload,
         GroupDMChannel as GroupChannelPayload,
         StageChannel as StageChannelPayload,
@@ -829,6 +831,9 @@ class TextChannel(abc.Messageable, abc.GuildChannel, Hashable, PinsMixin):
         )
 
 
+
+
+
 class ForumChannel(abc.GuildChannel, Hashable):
     """Represents a Discord guild forum channel.
 
@@ -876,6 +881,14 @@ class ForumChannel(abc.GuildChannel, Hashable):
         The archive duration which threads from this channel inherit by default.
     last_message_id: :class:`int`
         The snowflake ID of the message starting the last thread in this channel.
+    available_tags: :class:`ForumTagPayload`
+        The tags available to the channel.
+    applied_tags: :class:`ForumTagPayload`
+        The tags that are applied to the channel.
+    default_reaction_emoji: :class:`DefaultEmojiPayload`
+        The default emoji.
+    default_thread_rate_limit_per_user: :class:`int`
+        The amount of threads one may create before being ratelimited.
     """
 
     __slots__ = (
@@ -890,6 +903,10 @@ class ForumChannel(abc.GuildChannel, Hashable):
         "slowmode_delay",
         "default_auto_archive_duration",
         "last_message_id",
+        "available_tags",
+        "applied_tags",
+        "default_reaction_emoji",
+        "default_thread_rate_limit_per_user",
         "_state",
         "_type",
         "_overwrites",
@@ -915,6 +932,13 @@ class ForumChannel(abc.GuildChannel, Hashable):
             "default_auto_archive_duration", 1440
         )
         self.last_message_id: Optional[int] = utils._get_as_snowflake(data, "last_message_id")
+
+        # Forum specific fields.
+        self.available_tags: List[ForumTagPayload] = data["available_tags"]
+        self.applied_tags: List[int] = data["applied_tags"]
+        self.default_reaction_emoji: DefaultEmojiPayload =  data["default_reaction_emoji"]
+        self.default_thread_rate_limit_per_user: int = data["default_thread_rate_limit_per_user"]
+
         self._fill_overwrites(data)
 
     async def _get_channel(self):
