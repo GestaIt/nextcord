@@ -55,6 +55,7 @@ if TYPE_CHECKING:
     from .types.snowflake import SnowflakeList
     from .types.threads import (
         Thread as ThreadPayload,
+        ForumThread as ForumThreadPayload,
         ThreadArchiveDuration,
         ThreadMember as ThreadMemberPayload,
         ThreadMetadata,
@@ -153,6 +154,7 @@ class Thread(Messageable, Hashable, PinsMixin):
         "auto_archive_duration",
         "archive_timestamp",
         "create_timestamp",
+        "applied_tags",
         "flags",
     )
 
@@ -185,6 +187,7 @@ class Thread(Messageable, Hashable, PinsMixin):
         self.message_count = data["message_count"]
         self.member_count = data["member_count"]
         self._unroll_metadata(data["thread_metadata"])
+        self.applied_tags: Optional[List[Snowflake]] = data.get("applied_tags", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
 
         try:

@@ -68,6 +68,7 @@ class Thread(_ThreadOptional):
     message_count: int
     rate_limit_per_user: int
     thread_metadata: ThreadMetadata
+    applied_tags: Optional[List[Snowflake]]
 
 
 class ThreadPaginationPayload(TypedDict):
