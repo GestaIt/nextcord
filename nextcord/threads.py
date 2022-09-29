@@ -154,7 +154,6 @@ class Thread(Messageable, Hashable, PinsMixin):
         "auto_archive_duration",
         "archive_timestamp",
         "create_timestamp",
-        "applied_tags",
         "flags",
     )
 
@@ -187,7 +186,6 @@ class Thread(Messageable, Hashable, PinsMixin):
         self.message_count = data["message_count"]
         self.member_count = data["member_count"]
         self._unroll_metadata(data["thread_metadata"])
-        self.applied_tags: Optional[List[Snowflake]] = data.get("applied_tags", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
 
         try:
@@ -858,3 +856,24 @@ class ThreadMember(Hashable):
             This method is an API call. If you have :attr:`Intents.members` and members cache enabled, consider :attr:`member` instead.
         """
         return await self.parent.guild.fetch_member(self.id)
+
+
+class ForumThread(Thread):
+    """Represents a thread created for a forum post.
+
+    Attributes
+    ----------
+    applied_tags: List[:class:`ForumThreadPayload`]
+        An array containing the associated tags.
+    """
+    __slots__ = (
+        "applied_tags",
+    )
+
+    def __init__(self, *, guild: Guild, state: ConnectionState, data: ForumThreadPayload):
+        super().__init__(guild=guild, state=state, data=data)
+        self._update(data=data)
+
+    def _update(self, data: ForumThreadPayload):
+        self.applied_tags = data["applied_tags"]
+        super()._update(data=data)
