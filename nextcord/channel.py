@@ -935,8 +935,8 @@ class ForumChannel(abc.GuildChannel, Hashable):
 
         # Forum specific fields.
         self.available_tags: List[ForumTagPayload] = data["available_tags"]
-        self.applied_tags: List[int] = data["applied_tags"]
-        self.default_reaction_emoji: DefaultEmojiPayload =  data["default_reaction_emoji"]
+        self.applied_tags: List[int] = self.applied_tags
+        self.default_reaction_emoji: DefaultEmojiPayload = data["default_reaction_emoji"]
         self.default_thread_rate_limit_per_user: int = data["default_thread_rate_limit_per_user"]
 
         self._fill_overwrites(data)
