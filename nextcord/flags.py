@@ -284,6 +284,10 @@ class ChannelFlags(BaseFlags):
         """:class:`bool`: Returns ``True`` if the channel is pinned."""
         return 1
 
+    @flag_value
+    def require_tag(self):
+        return 16
+
 
 @fill_with_flags()
 class MessageFlags(BaseFlags):
